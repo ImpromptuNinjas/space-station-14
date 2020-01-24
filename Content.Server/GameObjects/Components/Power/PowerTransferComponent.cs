@@ -6,6 +6,7 @@ using Robust.Server.Interfaces.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Interfaces.GameObjects.Components;
 using Robust.Shared.IoC;
+using Robust.Shared.Serialization;
 using Robust.Shared.ViewVariables;
 
 namespace Content.Server.GameObjects.Components.Power
@@ -26,6 +27,20 @@ namespace Content.Server.GameObjects.Components.Power
 
         [ViewVariables]
         public bool Regenerating { get; set; } = false;
+
+        [ViewVariables]
+        public WireType Type { get => _type; set => _type = value; }
+
+        public enum WireType { Low, Med, High }
+
+
+        private WireType _type;
+
+        public override void ExposeData(ObjectSerializer serializer)
+        {
+            base.ExposeData(serializer);
+            serializer.DataField(ref _type, "wiretype", WireType.High);
+        }
 
         protected override void Startup()
         {
@@ -60,7 +75,7 @@ namespace Content.Server.GameObjects.Components.Power
                 foreach (var wire in wires)
                 {
                     var ptc = wire.GetComponent<PowerTransferComponent>();
-                    if (ptc.CanConnectTo())
+                    if (ptc.CanConnectTo(Type))
                     {
                         ConnectToPowernet(ptc.Parent);
                         break;
@@ -96,12 +111,12 @@ namespace Content.Server.GameObjects.Components.Power
             foreach (var wire in wires)
             {
                 var ptc = wire.GetComponent<PowerTransferComponent>();
-                if (ptc.Parent == null || Regenerating)
+                if ((ptc.Parent == null || Regenerating) && ptc.Type == Type)
                 {
                     ptc.ConnectToPowernet(Parent);
                     ptc.SpreadPowernet();
                 }
-                else if (ptc.Parent != Parent && !ptc.Parent.Dirty)
+                else if (ptc.Parent != Parent && !ptc.Parent.Dirty && ptc.Type == Type)
                 {
                     Parent.MergePowernets(ptc.Parent);
                 }
@@ -130,9 +145,9 @@ namespace Content.Server.GameObjects.Components.Power
         }
 
 
-        public bool CanConnectTo()
+        public bool CanConnectTo(WireType volt)
         {
-            return Parent != null && Parent.Dirty == false && !Regenerating;
+            return Parent != null && Parent.Dirty == false && !Regenerating && Type.Equals(volt);
         }
 
         public bool AttackBy(AttackByEventArgs eventArgs)
