@@ -54,6 +54,7 @@ namespace Content.Server.GameObjects.Components.Power
         /// <summary>
         /// Find a nearby wire which will have a powernet and connect ourselves to its powernet
         /// </summary>
+
         public void TryCreatePowernetConnection()
         {
             if (Parent != null)
@@ -62,17 +63,17 @@ namespace Content.Server.GameObjects.Components.Power
             }
             var _emanager = IoCManager.Resolve<IServerEntityManager>();
             var position = Owner.GetComponent<ITransformComponent>().WorldPosition;
-            var wires = _emanager.GetEntitiesIntersecting(Owner)
-                        .Where(x => x.HasComponent<PowerTransferComponent>())
-                        .OrderByDescending(x => (x.GetComponent<ITransformComponent>().WorldPosition - position).Length);
-            var choose = wires.FirstOrDefault();
-            if (choose != null)
+
+            PowerTransferComponent transferComponent;
+
+            var wire = _emanager.GetEntitiesInRange(Owner.GetComponent<ITransformComponent>().GridPosition, 5f)
+                .Where(x => x.HasComponent<PowerTransferComponent>())
+                .OrderByDescending(x => (x.GetComponent<ITransformComponent>().WorldPosition - position).Length)
+                .FirstOrDefault();
+            var transfer = wire?.GetComponent<PowerTransferComponent>();
+            if (transfer?.Parent != null)
             {
-                var transfer = choose.GetComponent<PowerTransferComponent>();
-                if (transfer.Parent != null)
-                {
-                    ConnectToPowernet(transfer.Parent);
-                }
+                ConnectToPowernet(transfer.Parent);
             }
         }
 
