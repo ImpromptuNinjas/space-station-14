@@ -31,7 +31,7 @@ namespace Content.Server.GameObjects.Components.Power
         [ViewVariables]
         public WireType Type { get => _type; set => _type = value; }
 
-        public enum WireType { Low, Med, High }
+        public enum WireType { MVWire, HVWire }
 
 
         private WireType _type;
@@ -39,7 +39,7 @@ namespace Content.Server.GameObjects.Components.Power
         public override void ExposeData(ObjectSerializer serializer)
         {
             base.ExposeData(serializer);
-            serializer.DataField(ref _type, "wiretype", WireType.High);
+            serializer.DataField(ref _type, "wiretype", WireType.HVWire);
         }
 
         protected override void Startup()
@@ -90,20 +90,23 @@ namespace Content.Server.GameObjects.Components.Power
                 }
             }
 
-            //Find nodes intersecting us and if not already assigned to a powernet assign them to us
-            var nodes = _emanager.GetEntitiesIntersecting(Owner)
+            //Find nodes in range and if not already assigned to a powernet assign them to us
+            var nodes = _emanager.GetEntitiesInRange(Owner, 5.0f)
                         .Where(x => x.HasComponent<PowerNodeComponent>())
                         .Select(x => x.GetComponent<PowerNodeComponent>());
 
             foreach (var node in nodes)
             {
-                if (node.Parent == null)
+                if (node.NodeWireType.Equals(Type))
                 {
-                    node.ConnectToPowernet(Parent);
-                }
-                else if (node.Parent.Dirty)
-                {
-                    node.RegeneratePowernet(Parent);
+                    if (node.Parent == null)
+                    {
+                        node.ConnectToPowernet(Parent);
+                    }
+                    else if (node.Parent.Dirty)
+                    {
+                        node.RegeneratePowernet(Parent);
+                    }
                 }
             }
 
@@ -155,7 +158,15 @@ namespace Content.Server.GameObjects.Components.Power
             if (eventArgs.AttackWith.TryGetComponent(out WirecutterComponent wirecutter))
             {
                 Owner.Delete();
-                var droppedEnt = Owner.EntityManager.SpawnEntityAt("CableStack", eventArgs.ClickLocation);
+
+                var droptype = "HVCableStack";
+
+                if(Type.Equals(0))
+                {
+                    droptype = "MVCableStack";
+                }
+
+                var droppedEnt = Owner.EntityManager.SpawnEntityAt(droptype, eventArgs.ClickLocation);
 
                 if (droppedEnt.TryGetComponent<StackComponent>(out var stackComp))
                     stackComp.Count = 1;
