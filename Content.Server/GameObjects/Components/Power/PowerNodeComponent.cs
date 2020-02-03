@@ -61,12 +61,10 @@ namespace Content.Server.GameObjects.Components.Power
             {
                 return;
             }
-            var _emanager = IoCManager.Resolve<IServerEntityManager>();
+            var entMgr = IoCManager.Resolve<IServerEntityManager>();
             var position = Owner.GetComponent<ITransformComponent>().WorldPosition;
 
-            PowerTransferComponent transferComponent;
-
-            var wire = _emanager.GetEntitiesInRange(Owner.GetComponent<ITransformComponent>().GridPosition, 5f)
+            var wire = entMgr.GetEntitiesInRange(Owner.GetComponent<ITransformComponent>().GridPosition, 5f)
                 .Where(x => x.HasComponent<PowerTransferComponent>())
                 .OrderByDescending(x => (x.GetComponent<ITransformComponent>().WorldPosition - position).Length)
                 .FirstOrDefault();

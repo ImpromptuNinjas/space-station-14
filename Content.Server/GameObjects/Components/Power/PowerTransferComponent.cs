@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using Content.Server.GameObjects.Components.Interactable.Tools;
 using Content.Server.GameObjects.Components.Stack;
 using Content.Server.GameObjects.EntitySystems;
@@ -49,22 +50,13 @@ namespace Content.Server.GameObjects.Components.Power
         /// </summary>
         public void SpreadPowernet() {
             var sgc = Owner.GetComponent<SnapGridComponent>();
+            var entMan = IoCManager.Resolve<IServerEntityManager>();
+
             var ptcs = sgc.GetCardinalNeighborCells()
                 .SelectMany(x => x.GetLocal()).Distinct()
                 .Select(x => x.TryGetComponent<PowerTransferComponent>(out var c) ? c : null)
                 .Where(x => x != null).Distinct()
                 .ToArray();
-            /*
-            var ptcs = entMan.GetEntitiesInRange(Owner, 1.1f)
-                .Select(x => x.TryGetComponent<PowerTransferComponent>(out var c) ? c : null)
-                .Where(ptc => ptc != null && ptc.Owner.Uid != uid)
-                .Distinct()
-                .ToArray();
-            */
-            var entMan = IoCManager.Resolve<IServerEntityManager>();
-            //var position = Owner.GetComponent<ITransformComponent>().WorldPosition;
-            //var cells = sgc.GetCardinalNeighborCells().ToArray();
-            var uid = Owner.Uid;
 
             //we have no parent so lets find a partner we can join his powernet
             if (Parent == null || Regenerating)
