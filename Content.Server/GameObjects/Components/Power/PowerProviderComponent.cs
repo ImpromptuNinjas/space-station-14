@@ -23,7 +23,7 @@ namespace Content.Server.GameObjects.Components.Power
         public override string Name => "PowerProvider";
 
         /// <inheritdoc />
-        public override DrawTypes DrawType { get; protected set; } = DrawTypes.Node;
+        protected override DrawTypes DefaultDrawType => DrawTypes.Node;
 
         protected override bool SaveLoad => false;
 
@@ -239,6 +239,8 @@ namespace Content.Server.GameObjects.Components.Power
         /// </summary>
         public void AddDevice(PowerDeviceComponent device)
         {
+            if (DeviceLoadList.Contains(device))
+                return;
             DeviceLoadList.Add(device);
             TheoreticalLoad += device.Load;
             if (!device.Powered)
@@ -248,13 +250,11 @@ namespace Content.Server.GameObjects.Components.Power
         /// <summary>
         ///     Update one of the loads from a deviceconnected to the powernet
         /// </summary>
-        public void UpdateDevice(PowerDeviceComponent device, float oldLoad)
-        {
-            if (DeviceLoadList.Contains(device))
-            {
-                TheoreticalLoad -= oldLoad;
-                TheoreticalLoad += device.Load;
-            }
+        public void UpdateDevice(PowerDeviceComponent device, float oldLoad) {
+            if (!DeviceLoadList.Contains(device))
+                return;
+
+            TheoreticalLoad = TheoreticalLoad - oldLoad + device.Load;
         }
 
         /// <summary>
