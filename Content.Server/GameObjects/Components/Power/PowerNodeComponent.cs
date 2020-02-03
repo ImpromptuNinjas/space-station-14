@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Query;
 using Robust.Server.Interfaces.GameObjects;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Interfaces.GameObjects;
 using Robust.Shared.Interfaces.GameObjects.Components;
 using Robust.Shared.IoC;
+using Robust.Shared.Serialization;
 using Robust.Shared.ViewVariables;
 
 namespace Content.Server.GameObjects.Components.Power
@@ -36,6 +39,15 @@ namespace Content.Server.GameObjects.Components.Power
         /// An event that registers us to a regenerating powernet
         /// </summary>
         public event EventHandler<PowernetEventArgs> OnPowernetRegenerate;
+
+        public PowerTransferComponent.WireType NodeWireType { get => _nodewiretype; set => _nodewiretype = value; }
+
+        private PowerTransferComponent.WireType _nodewiretype;
+        public override void ExposeData(ObjectSerializer serializer)
+        {
+            base.ExposeData(serializer);
+            serializer.DataField(ref _nodewiretype, "wiretype", PowerTransferComponent.WireType.HVWire);
+        }
 
         protected override void Startup()
         {

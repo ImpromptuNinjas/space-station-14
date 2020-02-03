@@ -8,6 +8,7 @@ using Robust.Shared.Interfaces.GameObjects;
 using Robust.Shared.Interfaces.Map;
 using Robust.Shared.IoC;
 using Robust.Shared.Map;
+using Robust.Shared.Serialization;
 
 namespace Content.Server.GameObjects.Components.Power
 {
@@ -21,6 +22,16 @@ namespace Content.Server.GameObjects.Components.Power
 
         /// <inheritdoc />
         public override string Name => "WirePlacer";
+
+        public PowerTransferComponent.WireType WireType { get => _wiretype; private set => _wiretype = value; }
+
+        private PowerTransferComponent.WireType _wiretype;
+
+        public override void ExposeData(ObjectSerializer serializer)
+        {
+            base.ExposeData(serializer);
+            serializer.DataField(ref _wiretype, "wiretype", PowerTransferComponent.WireType.HVWire);
+        }
 
         /// <inheritdoc />
         public void AfterAttack(AfterAttackEventArgs eventArgs)
@@ -52,8 +63,7 @@ namespace Content.Server.GameObjects.Components.Power
             if (Owner.TryGetComponent(out StackComponent stack) && !stack.Use(1))
                 return;
 
-            GridCoordinates coordinates = grid.GridTileToLocal(snapPos);
-            var newWire = _entityManager.SpawnEntity("Wire", coordinates);
+            var newWire = _entityManager.SpawnEntity(WireType.ToString("g"), grid.GridTileToLocal(snapPos));
             if (newWire.TryGetComponent(out SpriteComponent wireSpriteComp) && hasItemSpriteComp)
             {
                 wireSpriteComp.Color = itemSpriteComp.Color;

@@ -7,6 +7,7 @@ using Robust.Server.Interfaces.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameObjects.Components.Transform;
 using Robust.Shared.IoC;
+using Robust.Shared.Serialization;
 using Robust.Shared.ViewVariables;
 
 namespace Content.Server.GameObjects.Components.Power
@@ -27,6 +28,20 @@ namespace Content.Server.GameObjects.Components.Power
 
         [ViewVariables]
         public bool Regenerating { get; set; } = false;
+
+        [ViewVariables]
+        public WireType Type { get => _type; set => _type = value; }
+
+        public enum WireType { MVWire, HVWire }
+
+
+        private WireType _type;
+
+        public override void ExposeData(ObjectSerializer serializer)
+        {
+            base.ExposeData(serializer);
+            serializer.DataField(ref _type, "wiretype", WireType.HVWire);
+        }
 
         protected override void Startup()
         {
@@ -63,7 +78,7 @@ namespace Content.Server.GameObjects.Components.Power
             {
                 foreach (var ptc in ptcs)
                 {
-                    if (ptc.CanConnectTo())
+                    if (ptc.CanConnectTo(Type))
                     {
                         ConnectToPowernet(ptc.Parent);
                         break;
@@ -77,14 +92,16 @@ namespace Content.Server.GameObjects.Components.Power
                 }
             }
 
-            //Find nodes intersecting us and if not already assigned to a powernet assign them to us
-            var nodes = entMan.GetEntitiesIntersecting(Owner)
+            //Find nodes in range and if not already assigned to a powernet assign them to us
+            var nodes = entMan.GetEntitiesInRange(Owner, 5.0f)
                 .Select(x => x.TryGetComponent<PowerNodeComponent>(out var pnc) ? pnc : null)
                 .Where(x => x != null)
                 .ToArray();
 
             foreach (var node in nodes)
             {
+                if (node.NodeWireType.Equals(Type))
+                {
                 if (node.Parent == null)
                 {
                     node.ConnectToPowernet(Parent);
@@ -94,16 +111,17 @@ namespace Content.Server.GameObjects.Components.Power
                     node.RegeneratePowernet(Parent);
                 }
             }
+            }
 
             //spread powernet to nearby wires which haven't got one yet, and tell them to spread as well
             foreach (var ptc in ptcs)
             {
-                if (ptc.Parent == null || Regenerating)
+                if ((ptc.Parent == null || Regenerating) && ptc.Type == Type)
                 {
                     ptc.ConnectToPowernet(Parent);
                     ptc.SpreadPowernet();
                 }
-                else if (ptc.Parent != Parent && !ptc.Parent.Dirty)
+                else if (ptc.Parent != Parent && !ptc.Parent.Dirty && ptc.Type == Type)
                 {
                     Parent.MergePowernets(ptc.Parent);
                 }
@@ -134,9 +152,9 @@ namespace Content.Server.GameObjects.Components.Power
         }
 
 
-        public bool CanConnectTo()
+        public bool CanConnectTo(WireType volt)
         {
-            return Parent != null && Parent.Dirty == false && !Regenerating;
+            return Parent != null && Parent.Dirty == false && !Regenerating && Type.Equals(volt);
         }
 
         public bool AttackBy(AttackByEventArgs eventArgs)
@@ -144,7 +162,15 @@ namespace Content.Server.GameObjects.Components.Power
             if (eventArgs.AttackWith.TryGetComponent(out WirecutterComponent wirecutter))
             {
                 Owner.Delete();
-                var droppedEnt = Owner.EntityManager.SpawnEntity("CableStack", eventArgs.ClickLocation);
+
+                var droptype = "HVCableStack";
+
+                if(Type.Equals(0))
+                {
+                    droptype = "MVCableStack";
+                }
+
+                var droppedEnt = Owner.EntityManager.SpawnEntity(droptype, eventArgs.ClickLocation);
 
                 if (droppedEnt.TryGetComponent<StackComponent>(out var stackComp))
                     stackComp.Count = 1;
