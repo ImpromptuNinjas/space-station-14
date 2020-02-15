@@ -68,8 +68,9 @@ namespace Content.Shared.GameObjects.Components.Research
     [NetSerializable, Serializable]
     public class MaterialStorageState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.MATERIAL_STORAGE;
         public readonly Dictionary<string, int> Storage;
-        public MaterialStorageState(Dictionary<string, int> storage) : base(ContentNetIDs.MATERIAL_STORAGE)
+        public MaterialStorageState(Dictionary<string, int> storage)
         {
             Storage = storage;
         }

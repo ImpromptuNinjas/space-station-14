@@ -15,10 +15,11 @@ namespace Content.Shared.GameObjects
     [Serializable, NetSerializable]
     public class HandsComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.HANDS;
         public readonly Dictionary<string, EntityUid> Hands;
         public readonly string ActiveIndex;
 
-        public HandsComponentState(Dictionary<string, EntityUid> hands, string activeIndex) : base(ContentNetIDs.HANDS)
+        public HandsComponentState(Dictionary<string, EntityUid> hands, string activeIndex)
         {
             Hands = hands;
             ActiveIndex = activeIndex;

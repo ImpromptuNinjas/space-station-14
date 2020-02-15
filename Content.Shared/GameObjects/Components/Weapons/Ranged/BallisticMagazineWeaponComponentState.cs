@@ -7,6 +7,9 @@ namespace Content.Shared.GameObjects.Components.Weapons.Ranged
     [Serializable, NetSerializable]
     public class BallisticMagazineWeaponComponentState : ComponentState
     {
+
+        public override uint NetID => ContentNetIDs.BALLISTIC_MAGAZINE_WEAPON;
+
         /// <summary>
         ///     True if a bullet is chambered.
         /// </summary>
@@ -20,7 +23,7 @@ namespace Content.Shared.GameObjects.Components.Weapons.Ranged
         /// </remarks>
         public (int count, int max)? MagazineCount { get; }
 
-        public BallisticMagazineWeaponComponentState(bool chambered, (int count, int max)? magazineCount) : base(ContentNetIDs.BALLISTIC_MAGAZINE_WEAPON)
+        public BallisticMagazineWeaponComponentState(bool chambered, (int count, int max)? magazineCount)
         {
             Chambered = chambered;
             MagazineCount = magazineCount;

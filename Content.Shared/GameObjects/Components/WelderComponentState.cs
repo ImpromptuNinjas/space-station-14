@@ -7,11 +7,12 @@ namespace Content.Shared.GameObjects.Components
     [NetSerializable, Serializable]
     public class WelderComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.WELDER;
         public float FuelCapacity { get; }
         public float Fuel { get; }
         public bool Activated { get; }
 
-        public WelderComponentState(float fuelCapacity, float fuel, bool activated) : base(ContentNetIDs.WELDER)
+        public WelderComponentState(float fuelCapacity, float fuel, bool activated)
         {
             FuelCapacity = fuelCapacity;
             Fuel = fuel;

@@ -12,10 +12,11 @@ namespace Content.Shared.GameObjects.Components
         [Serializable, NetSerializable]
         protected sealed class StackComponentState : ComponentState
         {
+            public override uint NetID => ContentNetIDs.STACK;
             public int Count { get; }
             public int MaxCount { get; }
 
-            public StackComponentState(int count, int maxCount) : base(ContentNetIDs.STACK)
+            public StackComponentState(int count, int maxCount)
             {
                 Count = count;
                 MaxCount = maxCount;

@@ -26,9 +26,10 @@ namespace Content.Shared.Preferences
             public PlayerPreferences Preferences;
             public GameSettings Settings;
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer)
+            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
             {
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
+                serializer.UseCompression = isCompressed;
                 var length = buffer.ReadInt32();
                 var bytes = buffer.ReadBytes(length);
                 using (var stream = new MemoryStream(bytes))
@@ -43,9 +44,10 @@ namespace Content.Shared.Preferences
                 }
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
             {
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
+                serializer.UseCompression = !willBeCompressed;
                 using (var stream = new MemoryStream())
                 {
                     serializer.Serialize(stream, Preferences);
@@ -77,12 +79,12 @@ namespace Content.Shared.Preferences
 
             public int SelectedCharacterIndex;
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer)
+            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
             {
                 SelectedCharacterIndex = buffer.ReadInt32();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
             {
                 buffer.Write(SelectedCharacterIndex);
             }
@@ -105,10 +107,11 @@ namespace Content.Shared.Preferences
             public int Slot;
             public ICharacterProfile Profile;
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer)
+            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
             {
                 Slot = buffer.ReadInt32();
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
+                serializer.UseCompression = isCompressed;
                 var length = buffer.ReadInt32();
                 var bytes = buffer.ReadBytes(length);
                 using (var stream = new MemoryStream(bytes))
@@ -117,10 +120,11 @@ namespace Content.Shared.Preferences
                 }
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
             {
                 buffer.Write(Slot);
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
+                serializer.UseCompression = !willBeCompressed;
                 using (var stream = new MemoryStream())
                 {
                     serializer.Serialize(stream, Profile);

@@ -12,11 +12,11 @@ namespace Content.Shared.GameObjects.Components.Mobs
         [Serializable, NetSerializable]
         protected sealed class CombatModeComponentState : ComponentState
         {
+            public override uint NetID => ContentNetIDs.COMBATMODE;
             public bool IsInCombatMode { get; }
             public TargetingZone TargetingZone { get; }
 
             public CombatModeComponentState(bool isInCombatMode, TargetingZone targetingZone)
-                : base(ContentNetIDs.COMBATMODE)
             {
                 IsInCombatMode = isInCombatMode;
                 TargetingZone = targetingZone;

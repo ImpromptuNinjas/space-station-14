@@ -39,7 +39,7 @@ namespace Content.Shared.Chat
         /// </summary>
         public EntityUid SenderEntity { get; set; }
 
-        public override void ReadFromBuffer(NetIncomingMessage buffer)
+        public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
         {
             Channel = (ChatChannel) buffer.ReadByte();
             Message = buffer.ReadString();
@@ -54,7 +54,7 @@ namespace Content.Shared.Chat
             }
         }
 
-        public override void WriteToBuffer(NetOutgoingMessage buffer)
+        public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
         {
             buffer.Write((byte)Channel);
             buffer.Write(Message);

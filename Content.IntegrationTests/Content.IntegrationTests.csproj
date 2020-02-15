@@ -11,6 +11,8 @@
   </PropertyGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.DefineConstants.targets" />
   <ItemGroup>
+    <PackageReference Include="Joveler.Compression.XZ" Version="3.1.1" />
+    <PackageReference Include="K4os.Compression.LZ4" Version="1.1.11" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.DeepObjectCompare" Version="2.0.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />

@@ -62,8 +62,9 @@ namespace Content.Shared.GameObjects.Components.Research
     [NetSerializable, Serializable]
     public class ProtolatheDatabaseState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.PROTOLATHE_DATABASE;
         public readonly List<string> Recipes;
-        public ProtolatheDatabaseState(List<string> recipes) : base(ContentNetIDs.PROTOLATHE_DATABASE)
+        public ProtolatheDatabaseState(List<string> recipes)
         {
             Recipes = recipes;
         }

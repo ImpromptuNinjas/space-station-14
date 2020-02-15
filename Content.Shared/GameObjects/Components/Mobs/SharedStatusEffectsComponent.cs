@@ -18,9 +18,10 @@ namespace Content.Shared.GameObjects.Components.Mobs
     [Serializable, NetSerializable]
     public class StatusEffectComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.STATUSEFFECTS;
         public Dictionary<StatusEffect, string> StatusEffects;
 
-        public StatusEffectComponentState(Dictionary<StatusEffect, string> statusEffects) : base(ContentNetIDs.STATUSEFFECTS)
+        public StatusEffectComponentState(Dictionary<StatusEffect, string> statusEffects)
         {
             StatusEffects = statusEffects;
         }

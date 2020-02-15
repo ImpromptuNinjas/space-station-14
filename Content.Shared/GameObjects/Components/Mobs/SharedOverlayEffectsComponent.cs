@@ -23,9 +23,10 @@ namespace Content.Shared.GameObjects.Components.Mobs
     [Serializable, NetSerializable]
     public class OverlayEffectComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.OVERLAYEFFECTS;
         public ScreenEffects ScreenEffect;
 
-        public OverlayEffectComponentState(ScreenEffects screenEffect) : base(ContentNetIDs.OVERLAYEFFECTS)
+        public OverlayEffectComponentState(ScreenEffects screenEffect)
         {
             ScreenEffect = screenEffect;
         }

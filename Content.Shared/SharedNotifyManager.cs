@@ -31,13 +31,13 @@ namespace Content.Shared
             public string Message { get; set; }
             public GridCoordinates Coordinates;
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer)
+            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
             {
                 Message = buffer.ReadString();
                 Coordinates = buffer.ReadGridLocalCoordinates();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
             {
                 buffer.Write(Message);
                 buffer.Write(Coordinates);
