@@ -44,10 +44,10 @@ namespace Content.Shared.Preferences
                 }
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
-                serializer.UseCompression = !willBeCompressed;
+                serializer.UseCompression = useCompression;
                 using (var stream = new MemoryStream())
                 {
                     serializer.Serialize(stream, Preferences);
@@ -84,7 +84,7 @@ namespace Content.Shared.Preferences
                 SelectedCharacterIndex = buffer.ReadInt32();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 buffer.Write(SelectedCharacterIndex);
             }
@@ -120,11 +120,11 @@ namespace Content.Shared.Preferences
                 }
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 buffer.Write(Slot);
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
-                serializer.UseCompression = !willBeCompressed;
+                serializer.UseCompression = useCompression;
                 using (var stream = new MemoryStream())
                 {
                     serializer.Serialize(stream, Profile);

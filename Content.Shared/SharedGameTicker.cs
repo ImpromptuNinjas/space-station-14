@@ -26,7 +26,7 @@ namespace Content.Shared
             {
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
             }
         }
@@ -45,7 +45,7 @@ namespace Content.Shared
             {
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
             }
         }
@@ -78,7 +78,7 @@ namespace Content.Shared
                 StartTime = new DateTime(buffer.ReadInt64(), DateTimeKind.Utc);
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 buffer.Write(IsRoundStarted);
 
@@ -109,7 +109,7 @@ namespace Content.Shared
                 TextBlob = buffer.ReadString();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 buffer.Write(TextBlob);
             }

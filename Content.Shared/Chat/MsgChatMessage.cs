@@ -54,7 +54,7 @@ namespace Content.Shared.Chat
             }
         }
 
-        public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+        public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
         {
             buffer.Write((byte)Channel);
             buffer.Write(Message);

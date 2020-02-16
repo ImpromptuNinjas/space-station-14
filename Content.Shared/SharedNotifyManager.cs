@@ -37,7 +37,7 @@ namespace Content.Shared
                 Coordinates = buffer.ReadGridLocalCoordinates();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 buffer.Write(Message);
                 buffer.Write(Coordinates);

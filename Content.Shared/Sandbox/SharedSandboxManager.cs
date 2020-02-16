@@ -23,7 +23,7 @@ namespace Content.Shared.Sandbox
                 SandboxAllowed = buffer.ReadBoolean();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
                 buffer.Write(SandboxAllowed);
             }
@@ -43,7 +43,7 @@ namespace Content.Shared.Sandbox
             {
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool willBeCompressed = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
             {
             }
         }
