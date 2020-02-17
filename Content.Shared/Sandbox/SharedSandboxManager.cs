@@ -18,12 +18,12 @@ namespace Content.Shared.Sandbox
 
             public bool SandboxAllowed { get; set; }
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
+            public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 SandboxAllowed = buffer.ReadBoolean();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer)
             {
                 buffer.Write(SandboxAllowed);
             }
@@ -39,11 +39,11 @@ namespace Content.Shared.Sandbox
 
             #endregion
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
+            public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer)
             {
             }
         }

@@ -22,11 +22,11 @@ namespace Content.Shared
 
             #endregion
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
+            public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer)
             {
             }
         }
@@ -41,11 +41,11 @@ namespace Content.Shared
 
             #endregion
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
+            public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer)
             {
             }
         }
@@ -65,7 +65,7 @@ namespace Content.Shared
             // UTC.
             public DateTime StartTime { get; set; }
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
+            public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 IsRoundStarted = buffer.ReadBoolean();
 
@@ -78,7 +78,7 @@ namespace Content.Shared
                 StartTime = new DateTime(buffer.ReadInt64(), DateTimeKind.Utc);
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer)
             {
                 buffer.Write(IsRoundStarted);
 
@@ -104,12 +104,12 @@ namespace Content.Shared
 
             public string TextBlob { get; set; }
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer, bool isCompressed = false)
+            public override void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 TextBlob = buffer.ReadString();
             }
 
-            public override void WriteToBuffer(NetOutgoingMessage buffer, bool useCompression = false)
+            public override void WriteToBuffer(NetOutgoingMessage buffer)
             {
                 buffer.Write(TextBlob);
             }
