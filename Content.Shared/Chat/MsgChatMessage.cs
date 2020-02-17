@@ -1,19 +1,36 @@
+using System;
 using Lidgren.Network;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Interfaces.Network;
 using Robust.Shared.Network;
+using Robust.Shared.Network.Messages;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared.Chat
 {
+
+    [Serializable, NetSerializable]
+    public struct ChatMessageState
+    {
+
+        public string Message { get; set; }
+
+        public string MessageWrap { get; set; }
+
+    }
+
     /// <summary>
     ///     Sent from server to client to notify the client about a new chat message.
     /// </summary>
-    public sealed class MsgChatMessage : NetMessage
+    public sealed class MsgChatMessage : NetMessageCompressed
     {
+
         #region REQUIRED
 
         public const MsgGroups GROUP = MsgGroups.Command;
+
         public const string NAME = nameof(MsgChatMessage);
+
         public MsgChatMessage(INetChannel channel) : base(NAME, GROUP) { }
 
         #endregion
@@ -23,15 +40,25 @@ namespace Content.Shared.Chat
         /// </summary>
         public ChatChannel Channel { get; set; }
 
+        private ChatMessageState state;
+
         /// <summary>
         ///     The actual message contents.
         /// </summary>
-        public string Message { get; set; }
+        public string Message
+        {
+            get => state.Message;
+            set => state.Message = value;
+        }
 
         /// <summary>
         ///     What to "wrap" the message contents with. Example is stuff like 'Joe says: "{0}"'
         /// </summary>
-        public string MessageWrap { get; set; }
+        public string MessageWrap
+        {
+            get => state.MessageWrap;
+            set => state.MessageWrap = value;
+        }
 
         /// <summary>
         ///     The sending entity.
@@ -42,8 +69,6 @@ namespace Content.Shared.Chat
         public override void ReadFromBuffer(NetIncomingMessage buffer)
         {
             Channel = (ChatChannel) buffer.ReadByte();
-            Message = buffer.ReadString();
-            MessageWrap = buffer.ReadString();
 
             switch (Channel)
             {
@@ -52,13 +77,13 @@ namespace Content.Shared.Chat
                     SenderEntity = buffer.ReadEntityUid();
                     break;
             }
+
+            DeserializeFromBuffer(buffer, out state, out _);
         }
 
         public override void WriteToBuffer(NetOutgoingMessage buffer)
         {
-            buffer.Write((byte)Channel);
-            buffer.Write(Message);
-            buffer.Write(MessageWrap);
+            buffer.Write((byte) Channel);
 
             switch (Channel)
             {
@@ -67,6 +92,10 @@ namespace Content.Shared.Chat
                     buffer.Write(SenderEntity);
                     break;
             }
+
+            SerializeToBuffer(buffer, state);
         }
+
     }
+
 }
