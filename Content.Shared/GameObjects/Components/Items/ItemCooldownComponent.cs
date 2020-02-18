@@ -72,10 +72,11 @@ namespace Content.Shared.GameObjects.Components.Items
         [Serializable, NetSerializable]
         private sealed class ItemCooldownComponentState : ComponentState
         {
+            public override uint NetID => ContentNetIDs.ITEMCOOLDOWN;
             public TimeSpan? CooldownStart { get; set; }
             public TimeSpan? CooldownEnd { get; set; }
 
-            public ItemCooldownComponentState() : base(ContentNetIDs.ITEMCOOLDOWN)
+            public ItemCooldownComponentState()
             {
             }
         }

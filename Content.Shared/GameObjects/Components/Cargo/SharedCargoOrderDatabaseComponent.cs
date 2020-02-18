@@ -15,8 +15,10 @@ namespace Content.Shared.GameObjects.Components.Cargo
     [NetSerializable, Serializable]
     public class CargoOrderDatabaseState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.CARGO_ORDER_DATABASE;
+
         public readonly List<CargoOrderData> Orders;
-        public CargoOrderDatabaseState(List<CargoOrderData> orders) : base(ContentNetIDs.CARGO_ORDER_DATABASE)
+        public CargoOrderDatabaseState(List<CargoOrderData> orders)
         {
             Orders = orders;
         }

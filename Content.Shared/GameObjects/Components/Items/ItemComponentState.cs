@@ -7,14 +7,10 @@ namespace Content.Shared.GameObjects.Components.Items
     [Serializable, NetSerializable]
     public class ItemComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.ITEM;
         public string EquippedPrefix { get; set; }
 
-        public ItemComponentState(string equippedPrefix) : base(ContentNetIDs.ITEM)
-        {
-            EquippedPrefix = equippedPrefix;
-        }
-
-        protected ItemComponentState(string equippedPrefix, uint netId) : base(netId)
+        public ItemComponentState(string equippedPrefix)
         {
             EquippedPrefix = equippedPrefix;
         }

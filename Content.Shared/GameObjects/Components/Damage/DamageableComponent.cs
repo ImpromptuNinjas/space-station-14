@@ -15,9 +15,10 @@ namespace Content.Shared.GameObjects
     [Serializable, NetSerializable]
     public class DamageComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.DAMAGEABLE;
         public Dictionary<DamageType, int> CurrentDamage = new Dictionary<DamageType, int>();
 
-        public DamageComponentState(Dictionary<DamageType, int> damage) : base(ContentNetIDs.DAMAGEABLE)
+        public DamageComponentState(Dictionary<DamageType, int> damage)
         {
             CurrentDamage = damage;
         }
