@@ -58,9 +58,10 @@ namespace Content.Shared.GameObjects.Components.Instruments
     [Serializable, NetSerializable]
     public class InstrumentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.INSTRUMENTS;
         public bool Playing { get; }
 
-        public InstrumentState(bool playing, uint sequencerTick = 0) : base(ContentNetIDs.INSTRUMENTS)
+        public InstrumentState(bool playing, uint sequencerTick = 0) : base()
         {
             Playing = playing;
         }

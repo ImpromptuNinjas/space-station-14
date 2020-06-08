@@ -20,7 +20,7 @@ namespace Content.Shared.GameObjects.Components.Chemistry
         [Serializable, NetSerializable]
         public class SolutionComponentState : ComponentState
         {
-            public SolutionComponentState() : base(ContentNetIDs.SOLUTION) { }
+            public override uint NetID => ContentNetIDs.SOLUTION;
         }
 
         /// <inheritdoc />

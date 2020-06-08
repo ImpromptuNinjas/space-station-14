@@ -26,9 +26,10 @@ namespace Content.Shared.GameObjects.Components.Interactable
     [NetSerializable, Serializable]
     public class MultiToolComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.MULTITOOLS;
         public ToolQuality Quality { get; }
 
-        public MultiToolComponentState(ToolQuality quality) : base(ContentNetIDs.MULTITOOLS)
+        public MultiToolComponentState(ToolQuality quality)
         {
             Quality = quality;
         }
@@ -37,12 +38,13 @@ namespace Content.Shared.GameObjects.Components.Interactable
     [NetSerializable, Serializable]
     public class WelderComponentState : ComponentState
     {
+        public override uint NetID => ContentNetIDs.WELDER;
         public float FuelCapacity { get; }
         public float Fuel { get; }
         public bool Activated { get; }
         public ToolQuality Quality { get; }
 
-        public WelderComponentState(float fuelCapacity, float fuel, bool activated) : base(ContentNetIDs.WELDER)
+        public WelderComponentState(float fuelCapacity, float fuel, bool activated)
         {
             FuelCapacity = fuelCapacity;
             Fuel = fuel;

@@ -161,6 +161,7 @@ namespace Content.Shared.GameObjects.Components.PDA
     [NetSerializable, Serializable]
     public class UplinkListingData : ComponentState, IEquatable<UplinkListingData>
     {
+        public override uint NetID => ContentNetIDs.PDA;
         public string ItemId;
         public int Price;
         public UplinkCategory Category;
@@ -169,7 +170,7 @@ namespace Content.Shared.GameObjects.Components.PDA
 
         public UplinkListingData(string listingName,string itemId,
             int price, UplinkCategory category,
-            string description) : base(ContentNetIDs.PDA)
+            string description)
         {
             ListingName = listingName;
             Price = price;
