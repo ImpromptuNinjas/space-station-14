@@ -177,7 +177,6 @@ namespace Content.Server.GameObjects.EntitySystems
                 }
 
                 var speed = mover.Sprinting ? mover.CurrentSprintSpeed : mover.CurrentWalkSpeed;
-                speed *= 1 + ( MathF.Log(frameTime / (1f / 60)) / 2.5f );
                 (physics.Controller as MoverController)?.Move(mover.VelocityDir, speed);
                 transform.LocalRotation = mover.VelocityDir.GetDir().ToAngle();
 
