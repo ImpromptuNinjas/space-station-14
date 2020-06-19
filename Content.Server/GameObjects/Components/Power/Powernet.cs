@@ -59,12 +59,12 @@ namespace Content.Server.GameObjects.Components.Power
         /// <summary>
         ///     All the devices that have been depowered by this powernet or depowered prior to being absorted into this powernet
         /// </summary>
-        private readonly List<PowerDeviceComponent> DepoweredDevices = new List<PowerDeviceComponent>();
+        private readonly HashSet<PowerDeviceComponent> DepoweredDevices = new HashSet<PowerDeviceComponent>();
 
         /// <summary>
         ///     A list of the energy storage components that will feed the powernet if necessary, and if there is enough power feed itself
         /// </summary>
-        private readonly List<PowerStorageNetComponent> PowerStorageSupplierList = new List<PowerStorageNetComponent>();
+        private readonly HashSet<PowerStorageNetComponent> PowerStorageSupplierList = new HashSet<PowerStorageNetComponent>();
 
         [ViewVariables]
         public int PowerStorageSupplierCount => PowerStorageSupplierList.Count;
@@ -72,7 +72,7 @@ namespace Content.Server.GameObjects.Components.Power
         /// <summary>
         ///     A list of energy storage components that will never feed the powernet, will try to draw energy to feed themselves if possible
         /// </summary>
-        private readonly List<PowerStorageNetComponent> PowerStorageConsumerList = new List<PowerStorageNetComponent>();
+        private readonly HashSet<PowerStorageNetComponent> PowerStorageConsumerList = new HashSet<PowerStorageNetComponent>();
 
         [ViewVariables]
         public int PowerStorageConsumerCount => PowerStorageConsumerList.Count;

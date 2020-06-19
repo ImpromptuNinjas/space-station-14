@@ -26,19 +26,21 @@ namespace Content.Shared.Preferences
             public PlayerPreferences Preferences;
             public GameSettings Settings;
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer)
+            public override unsafe void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
                 var length = buffer.ReadInt32();
-                var bytes = buffer.ReadBytes(length);
-                using (var stream = new MemoryStream(bytes))
+                var bytes = buffer.ReadBytes(stackalloc byte[length]);
+                fixed (byte* p = bytes)
                 {
+                    using var stream = new UnmanagedMemoryStream(p, bytes.Length, bytes.Length, FileAccess.Read);
                     Preferences = serializer.Deserialize<PlayerPreferences>(stream);
                 }
                 length = buffer.ReadInt32();
-                bytes = buffer.ReadBytes(length);
-                using (var stream = new MemoryStream(bytes))
+                bytes = buffer.ReadBytes(stackalloc byte[length]);
+                fixed (byte* p = bytes)
                 {
+                    using var stream = new UnmanagedMemoryStream(p, bytes.Length, bytes.Length, FileAccess.Read);
                     Settings = serializer.Deserialize<GameSettings>(stream);
                 }
             }
@@ -105,14 +107,15 @@ namespace Content.Shared.Preferences
             public int Slot;
             public ICharacterProfile Profile;
 
-            public override void ReadFromBuffer(NetIncomingMessage buffer)
+            public override unsafe void ReadFromBuffer(NetIncomingMessage buffer)
             {
                 Slot = buffer.ReadInt32();
                 var serializer = IoCManager.Resolve<IRobustSerializer>();
                 var length = buffer.ReadInt32();
-                var bytes = buffer.ReadBytes(length);
-                using (var stream = new MemoryStream(bytes))
+                var bytes = buffer.ReadBytes(stackalloc byte[length]);
+                fixed (byte* p = bytes)
                 {
+                    using var stream = new UnmanagedMemoryStream(p, bytes.Length, bytes.Length, FileAccess.Read);
                     Profile = serializer.Deserialize<ICharacterProfile>(stream);
                 }
             }

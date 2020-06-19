@@ -51,7 +51,7 @@ namespace Content.Server.GameObjects.Components.Power
         /// </summary>
         public HashSet<PowerDeviceComponent> AdvertisedDevices = new HashSet<PowerDeviceComponent>();
 
-        public List<PowerDeviceComponent> DepoweredDevices = new List<PowerDeviceComponent>();
+        public HashSet<PowerDeviceComponent> DepoweredDevices = new HashSet<PowerDeviceComponent>();
 
         public override Powernet.Priority Priority { get; protected set; } = Powernet.Priority.Provider;
 
